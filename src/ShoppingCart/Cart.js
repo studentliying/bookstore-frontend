@@ -3,160 +3,74 @@
  */
 import { Button, Table, Icon,  Form,  Layout, Menu, Breadcrumb,Popconfirm} from 'antd';
 import React, { Component } from 'react';
-
 import {Link} from "react-router-dom";
 import './../BookList/BookPage.css';
 import CartRow from './CartRow';
 
-
 const { Header, Content, Footer,  } = Layout;
 
-
-
-/*const columns = [{
-
-    title: 'Picture',
-    dataIndex: 'img',
-    key: 'img',
-    width: 180,
-    render: (text) => <img src={text} />
-},{
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    width: 250,
-    //render: text => <a href="javascript:;">{text}</a>,
-}, {
-    title: 'Year',
-    dataIndex: 'year',
-    key: 'year',
-    width: 100,
-}, {
-    title: 'Author',
-    dataIndex: 'author',
-    key: 'author',
-    width: 180,
-}, {
-    title: 'Price',
-    dataIndex: 'price',
-    key: 'price',
-    width: 150,
-}, {
-    title: 'amount',
-    dataindex: 'price',
-    key: 'amount',
-    width: 200,
-
-}];*/
-
-//const data=[];
-/*const data = [
-    {
-        name: "The Lord of the Rings",
-    year: 1954,
-    author: "J. R. R. Tolkien",
-    price: 50,
-    img: <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1525112927986&di=7f241b9d5324759e1c2e7e21c319a8ea&imgtype=0&src=http%3A%2F%2Fimages.ali213.net%2Fpicfile%2Fpic%2F2014%2F04%2F07%2F584_201404071422021000.jpg" />,
-}, {
-    name: "Le Petit Prince (The Little Prince)",
-        year: 1943,
-        author:"Antoine de Saint-Exupéry",
-        price: 30
-}, {
-    name: "Harry Potter and the Philosopher's Stone",
-        year: 1997,
-        author: "J. K. Rowling",
-        price: 65
-}, {
-    name: "And Then There Were None",
-        year: 1939,
-        author: "Agatha Christie",
-        price: 40
-}, {
-    name: "Dream of the Red Chamber",
-        year: 1754,
-        author: "Cao Xueqin",
-        price: 65
-}, {
-    name: "The Hobbit",
-        year: 1937,
-        author: "J. R. R. Tolkien",
-        price: 58
-}, {
-    name: "She: A History of Adventure",
-        year: 1887,
-        author: "H. Rider Haggard",
-        price: 45
-}];*/
-
-//data[0] = <CartRow cartId="1" bookName="The Lord of the Rings}" />;
-
-
-
-let result=[];
-
 class Cart extends React.Component {
-    constructor(props) {
-        super(props);
-        this.columns = [{
-            title: '书名',
-            dataIndex: 'name',
-            width: '30%',
-        },{
-            title: '数量',
-            dataIndex: 'amount',
-            render: (text, record) => (
-                <CartRow
-                    value={text}
-                    onChange={this.onCellChange(record.key, 'amount')}
-                />
-            ),
-        }, {
-            title: '价格',
-            dataIndex: 'price',
-        }, {
-            title: '作者',
-            dataIndex: 'author',
-        }, {
-            title:'删除',
-            dataIndex: 'operation',
-            render: (text, record) => {
-                return (
-                    this.state.dataSource.length > 1 ?
-                        (
-                            <Popconfirm title="确定删除?" onConfirm={() => this.onDelete(record.key)}>
-                                <a href="javascript:"><Icon type="delete"/></a>
-                            </Popconfirm>
-                        ) : null
-                );
-            },
-        }];
+  constructor(props) {
+    super(props);
+    this.columns = [{
+        title: '书名',
+        dataIndex: 'bookname',
+        width: '30%',
+    },{
+        title: '数量',
+        dataIndex: 'amount',
+        render: (text, record) => (
+            <CartRow
+                value={text}
+                onChange={this.onCellChange(record.key, 'amount')}
+            />),
+    }, {
+        title: '价格',
+        dataIndex: 'price',
+    }, {
+        title: '作者',
+        dataIndex: 'author',
+    }, {
+        title:'删除',
+        dataIndex: 'operation',
+        render: (text, record) => {
+          return (
+            this.state.dataSource.length > 1 ?
+              (
+                <Popconfirm title="确定删除?" onConfirm={() => this.onDelete(record.key)}>
+                    <a href="javascript:"><Icon type="delete"/></a>
+                </Popconfirm>
+              ) : null
+          );
+        },
+    }];
 
+    this.state = {
+        rowSelection:{},
+        dataSource: [],
+    };
 
+    fetch('http://localhost:8080/Cart/showcart',
+    {
+      method: 'GET',
+      mode: 'cors',
+      credentials:'include',
+    })
+      .then(response => {
+        console.log('Request successful', response);
+        return response.json()
+            .then(result => {
+              console.log(result.length);
+              this.setState({
+                dataSource: result
+              })
+            })
+      })
+  }
 
-
-
-        this.state = {
-            rowSelection:{},
-            dataSource: [{
-                key: '0',
-                name: 'Edward King 0',
-                amount: '1',
-                price: '32',
-                author: 'London, Park Lane no. 0',
-            }, {
-                key: '1',
-                name: 'Edward King 1',
-                amount: '1',
-                price: '32',
-                author: 'London, Park Lane no. 1',
-            }],
-            count: 2,
-        };
-    }
-        handleRowSelectionChange = (enable) => {
-            this.setState({ rowSelection: enable ? {} : undefined });
-        }
+    handleRowSelectionChange = (enable) => {
+        this.setState({ rowSelection: enable ? {} : undefined });
+    };
 
     onCellChange = (key, dataIndex) => {
         return (value) => {
@@ -167,11 +81,12 @@ class Cart extends React.Component {
                 this.setState({ dataSource });
             }
         };
-    }
+    };
+
     onDelete = (key) => {
         const dataSource = [...this.state.dataSource];
         this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
-    }
+    };
 
     handleAdd = () => {
         const { count, dataSource } = this.state;
@@ -221,8 +136,6 @@ class Cart extends React.Component {
                                 <Table bordered {...this.state}  dataSource={state.dataSource} columns={columns} />
                                 <Button size="large" type="primary" ><Link to ='./'>结算</Link></Button>
                             </div>
-
-
 
                         </Content>
                     </Layout>

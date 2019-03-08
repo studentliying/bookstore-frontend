@@ -44,20 +44,23 @@ class Logon extends React.Component {
             alert("密码不能为空");
         }
 
-        fetch('http://localhost:8080/logon?'+'name='+username+'&pwd='+password,
+        fetch('http://localhost:8080/User/logon?'+'name='+username+'&pwd='+password,
             {
                 method: 'POST',
                 mode: 'cors',
-
+                credentials:'include',
             })
             .then(function (response) {
                 console.log('Request successful', response);
-                return response.text();
+                if(response.status === 200){
+                  alert("登录成功！");
+                  window.location.href="/";
+                }
+                else
+                    alert("登录失败！");
             })
             .then(function (result) {
-                alert(result);
                 console.log("result: ", result);
-
             })
     };
 
@@ -100,8 +103,9 @@ class Logon extends React.Component {
                         <h3></h3>
 
                         <h2><Button size="large" type="primary" onClick={this.handleSubmit}>登录</Button>
+                            &nbsp;
                             <Button size="large" type="primary"><Link to="./login">注册</Link></Button>
-                            <Button size="large" type="dashed">忘记密码</Button></h2>
+                        </h2>
                     </Content>
                 </Layout>
             </Content>

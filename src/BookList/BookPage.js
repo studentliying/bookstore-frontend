@@ -10,7 +10,7 @@ import { Layout, Menu, Breadcrumb, Icon} from 'antd';
 
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
-var totalPrice = 0;
+let totalPrice = 0;
 
 const data = [{
     name: "The Lord of the Rings",
@@ -75,16 +75,16 @@ class BookPage extends React.Component {
             filteredInfo: filters,
             sortedInfo: sorter,
         });
-    }
+    };
     clearFilters = () => {
         this.setState({ filteredInfo: null });
-    }
+    };
     clearAll = () => {
         this.setState({
             filteredInfo: null,
             sortedInfo: null,
         });
-    }
+    };
     setNameSort = () => {
         this.setState({
             sortedInfo: {
@@ -92,7 +92,7 @@ class BookPage extends React.Component {
                 columnKey: 'name',
             },
         });
-    }
+    };
     setYearSort = () => {
         this.setState({
             sortedInfo: {
@@ -100,7 +100,7 @@ class BookPage extends React.Component {
                 columnKey: 'year',
             },
         });
-    }
+    };
     setAuthorSort = () => {
         this.setState({
             sortedInfo: {
@@ -108,7 +108,7 @@ class BookPage extends React.Component {
                 columnKey: 'author',
             },
         });
-    }
+    };
     setLanguageSort = () => {
         this.setState({
             sortedInfo: {
@@ -116,7 +116,7 @@ class BookPage extends React.Component {
                 columnKey: 'language',
             },
         });
-    }
+    };
     setPriceSort = () => {
         this.setState({
             sortedInfo: {
@@ -124,7 +124,7 @@ class BookPage extends React.Component {
                 columnKey: 'price',
             },
         });
-    }
+    };
 
 
     render() {
